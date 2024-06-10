@@ -1,0 +1,6 @@
+@MusikProjektetV3_HostAddress = http://localhost:5098
+
+GET {{MusikProjektetV3_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
