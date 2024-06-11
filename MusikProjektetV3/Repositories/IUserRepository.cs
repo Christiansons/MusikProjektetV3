@@ -6,7 +6,6 @@ namespace MusikProjektetV3.Repositories
 	public interface IUserRepository
 	{
 		void AddUser(User user);
-		User GetUserById(int id);
 		void SaveChanges();
 	}
 
@@ -18,10 +17,7 @@ namespace MusikProjektetV3.Repositories
             _context = context;
         }
         
-		public User GetUserById(int id)
-		{
-			
-		}
+		
 
 		public void AddUser(User user)
 		{

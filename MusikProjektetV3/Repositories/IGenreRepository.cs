@@ -32,5 +32,10 @@ namespace MusikProjektetV3.Repositories
 		{
 			_context.SaveChanges();
 		}
+
+		void IGenreRepository.AddGenre(Genre genre)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -45,7 +45,15 @@ namespace MusikProjektetV3.Repositories
 			_context.SaveChanges();
 		}
 
-		
+		public ListSongViewModel[] GetAllSongConnectedToUser(int id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Genre GetOrCreateGenre(GenreDto dto)
+		{
+			throw new NotImplementedException();
+		}
 
 		public void SaveChanges()
 		{
