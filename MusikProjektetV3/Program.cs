@@ -24,6 +24,7 @@ namespace MusikProjektetV3
 			builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 			builder.Services.AddScoped<IJunctionRepository, JunctionRepository>();
 			builder.Services.AddScoped<IGenreHandler, GenreHandler>();
+			builder.Services.AddScoped<IUserHandler, UserHandler>();
 			
 			//Lägg handlers här
 			builder.Services.AddScoped<ISongHandler, SongHandler>();
@@ -62,9 +63,9 @@ namespace MusikProjektetV3
 				return songHandler.AddSong(dto);
 			});
 
-			app.MapPost("AddUser/{userId}/{songId}", () =>
+			app.MapPost("/AddUser", (IUserHandler userHandler, UserDto dto) =>
 			{
-
+				return userHandler.AddUser(dto);
 			});
 
 
