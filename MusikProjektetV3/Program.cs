@@ -2,6 +2,7 @@ using MusikProjektetV3.Data;
 using Microsoft.EntityFrameworkCore;
 using MusikProjektetV3.Handlers;
 using MusikProjektetV3.Models.Dtos;
+using MusikProjektetV3.Repositories;
 
 namespace MusikProjektetV3
 {
@@ -17,6 +18,13 @@ namespace MusikProjektetV3
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+			builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
+			builder.Services.AddScoped<ISongRepository, SongRepository>();
+			builder.Services.AddScoped<IUserRepository, UserRepository>();
+			builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+			builder.Services.AddScoped<IJunctionRepository, JunctionRepository>();
+			
+			//Lägg handlers här
 			builder.Services.AddScoped<ISongHandler, SongHandler>();
 
 			string connectionString = builder.Configuration.GetConnectionString("myConnection");
@@ -58,7 +66,7 @@ namespace MusikProjektetV3
 
 			});
 
-			app.MapGet("/AddSong", (ISongHandler songHandler, AddSongDto dto) =>
+			app.MapPost("/AddSong", (ISongHandler songHandler, AddSongDto dto) =>
 			{
 				return songHandler.AddSong(dto);
 			});
