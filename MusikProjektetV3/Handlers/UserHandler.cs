@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MusikProjektetV3.Data;
 using MusikProjektetV3.Models;
+using MusikProjektetV3.Models.Dtos;
+using MusikProjektetV3.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +12,43 @@ using System.Threading.Tasks;
 
 namespace MusikProjektetV3.Handlers
 {
-	public class UserHandler
+	public interface IUserHandler
 	{
+		IResult AddUser(UserDto dto);
+	}
+	public class UserHandler : IUserHandler
+	{
+		private readonly IArtistRepository _artistRepo;
+		private readonly ISongRepository _songRepo;
+		private readonly IUserRepository _userRepo;
+		private readonly IGenreRepository _genreRepo;
+		private readonly IJunctionRepository _junctionRepo;
 
+		public UserHandler(IArtistRepository artistRepo, ISongRepository songRepo, IUserRepository userRepo, IGenreRepository genreRepo, IJunctionRepository junctionRepo)
+		{
+			_songRepo = songRepo;
+			_artistRepo = artistRepo;
+			_userRepo = userRepo;
+			_genreRepo = genreRepo;
+			_junctionRepo = junctionRepo;
+		}
+
+		public IResult AddUser(UserDto dto)
+		{
+			try
+			{
+				_userRepo.AddUser(new User
+				{
+					Name = dto.Name
+				});
+				_userRepo.SaveChanges();
+				return Results.Created();
+			}
+			catch
+			{
+				return Results.BadRequest("Error creating user");
+			}
+		}
 		//GET user/id, hämta all info från databasen med gillade låtar, artister genrer baserat på id
 
 		//GET user/id/recommends hämtar någon eller några relevanta låtar, artister från externt API baserat på id -- https://musicbrainz.org/doc/MusicBrainz_API#Linked_entities

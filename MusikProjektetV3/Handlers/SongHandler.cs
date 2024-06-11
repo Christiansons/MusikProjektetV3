@@ -10,39 +10,49 @@ using System.Net;
 using MusikProjektetV3.Models.Dtos;
 using MusikProjektetV3.Models.ViewModels;
 using System.Text.Json;
+using MusikProjektetV3.Repositories;
 
 namespace MusikProjektetV3.Handlers
 {
-
-	public class SongHandler
+	public interface ISongHandler
 	{
-		private readonly ApplicationContext context;
+		IResult GetArtist(string name);
+		IResult AddSong(AddSongDto addSongDto);
+		IResult AddSongToUser(int userId, Song song);
+		// Add other methods as needed, e.g., fetching similar songs
+	}
 
-        public SongHandler(ApplicationContext Context)
+	public class SongHandler : ISongHandler
+	{
+		private readonly IArtistRepository _artistRepo;
+		private readonly ISongRepository _songRepo;
+		private readonly IUserRepository _userRepo;
+		private readonly IGenreRepository _genreRepo;
+		private readonly IJunctionRepository _junctionRepo;
+
+        public SongHandler(IArtistRepository artistRepo, ISongRepository songRepo, IUserRepository userRepo, IGenreRepository genreRepo, IJunctionRepository junctionRepo)
 		{
-			context = Context;
+			_songRepo = songRepo;
+			_artistRepo = artistRepo;
+			_userRepo = userRepo;
+			_genreRepo = genreRepo;
+			_junctionRepo = junctionRepo;
 		}
 
-		//OPTIONAL När man lägger till en låt, hämta ldsiknande låtar från externt API, fråga om man vill lägga till
-
-		public static IResult GetArtist(ApplicationContext Context)
+		public IResult GetArtist(string name)
 		{
-			Artist artist = Context.Artists.FirstOrDefault();
+			Artist artist = _artistRepo.GetArtistByName(name);
 
 			return Results.Ok(artist);
 		}
 
-		//OPTIONAL När man lägger till en låt, hämta ldsiknande låtar från externt API, fråga om man vill lägga till
-
-		//POST /song lägger till en ny låt, den ska ha en genre och artist
-		public static IResult AddSong(ApplicationContext _context, AddSongDto addSongDto)
+		//POST /song Adds a new song to user, must have an artist and genre
+		public IResult AddSong(AddSongDto addSongDto)
         {
-			User user = _context.Users.Where(u => u.Id == 1).First();
+			//If artist already exists, use that one
+			Artist artist = _artistRepo.GetArtistByName(addSongDto.ArtistName);
 
-			//IF artist already added, use that one
-			Artist artist = _context.Artists.Where(a => a.ArtistName == addSongDto.ArtistName).FirstOrDefault();
-
-			//If not exist create a new one
+			//Create new artist if nonexistant
 			if (artist == null)
 			{
 				artist = new Artist
@@ -50,44 +60,49 @@ namespace MusikProjektetV3.Handlers
 					ArtistName = addSongDto.ArtistName,
 					Description = addSongDto.ArtistDescription,
 				};
-				_context.Artists.Add(artist);
+
+				_artistRepo.AddArtist(artist);
+				_artistRepo.SaveChanges();
 			}
 
+			//If genre already exists, use that one
+			Genre genre = _genreRepo.GetGenreByName(addSongDto.GenreName);
 
-			//IF genre already added, use that one
-			Genre genre = _context.Genres.Where(g => g.GenreName == addSongDto.GenreName).FirstOrDefault();
+			//Create new genre if nonexistant
 			if (genre == null)
 			{
 				genre = new Genre
 				{
 					GenreName = addSongDto.GenreName,
 				};
-				_context.Genres.Add(genre);
+				_genreRepo.AddGenre(genre);
+				_genreRepo.SaveChanges();
 			}
-
 
 			//Create new song
 			Song song = new Song
 			{
-				ArtistId = 3, 
-				GenreId = 3,
+				ArtistId = artist.Id, 
+				GenreId = genre.Id,
 				SongTitle = addSongDto.SongTitle
 			};
-			
-			_context.Songs.Add(song);
-			_context.SaveChanges();
+			_songRepo.AddSong(song);
+			_songRepo.SaveChanges();
 
 			//Check if song already connected to user
-			SongUser songUser = _context.SongUsers.Where(us => us.UserId == user.Id && us.SongsId == song.Id).FirstOrDefault();
-		
+			SongUser songUser = _juc
+
 			//Add new song to user
-			if( songUser == null )
+			if ( songUser == null )
 			{
 				_context.SongUsers.Add(new SongUser
 				{
 					SongsId = song.Id,
 					UserId = user.Id,
 				});
+			} else
+			{
+				return Results.BadRequest("User is already added!")
 			}
 			
 			try
@@ -100,29 +115,27 @@ namespace MusikProjektetV3.Handlers
 				return Results.BadRequest(ex);
 			}
 		}
-		//GET /song hämtar alla sånger i databasen
-		//public static IResult GetAllSongConnectedToUser(int id)
-		//{
-		//	User? user = context.Users
-		//		.Where(u => u.Id == id)
-		//		.Include(u => u.Songs)
-		//		.FirstOrDefault();
+		
+		public ListSongViewModel[] GetAllSongConnectedToUser(int id)
+		{
+			User? user = _context.Users
+				.Where(u => u.Id == id)
+				.Include(u => u.Songs)
+				.FirstOrDefault();
 
-		//	ListSongViewModel[]? UserSongList = user.Songs
-		//		.Select(s => new ListSongViewModel
-		//		{
-		//			SongTitle = s.SongTitle
-		//		}).ToArray();
+			if (user == null)
+			{
+				return new ListSongViewModel[] { };
+			}
 
-		//	if (UserSongList == null)
-		//	{
-		//		return Results.NotFound();
-		//	}
-		//	else
-		//	{
-		//		return Results.Json(UserSongList);
-		//	}
-		//}
+
+			return user.Songs
+				.Select(s => new ListSongViewModel
+				{
+					SongTitle = s.SongTitle
+				}).ToArray();
+
+		}
 
 	}
 	}

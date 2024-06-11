@@ -17,7 +17,7 @@ namespace MusikProjektetV3
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
-			builder.Services.AddScoped<SongHandler>();
+			builder.Services.AddScoped<ISongHandler, SongHandler>();
 
 			string connectionString = builder.Configuration.GetConnectionString("myConnection");
 			builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
@@ -58,21 +58,9 @@ namespace MusikProjektetV3
 
 			});
 
-			app.MapGet("/GetArtist", (ApplicationContext context) =>
+			app.MapGet("/AddSong", (ISongHandler songHandler, AddSongDto dto) =>
 			{
-				return SongHandler.GetArtist(context);
-			});
-
-			app.MapPost("AddSong/{songName}/{songGenre}/{songArtist}/{artistDescription}", (ApplicationContext context, string songName, string songGenre, string songArtist, string artistDescription) =>
-			{
-				AddSongDto dto = new AddSongDto
-				{
-					SongTitle = songName,
-					GenreName = songGenre,
-					ArtistName = songArtist,
-					ArtistDescription = artistDescription
-				};
-				return SongHandler.AddSong(context, dto);
+				return songHandler.AddSong(dto);
 			});
 
 			app.MapPost("AddUser/{userId}/{songId}", () =>
