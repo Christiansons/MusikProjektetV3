@@ -90,53 +90,13 @@ namespace MusikProjektetV3.Handlers
 			_songRepo.SaveChanges();
 
 			//Check if song already connected to user
-			SongUser songUser = _juc
-
-			//Add new song to user
-			if ( songUser == null )
-			{
-				_context.SongUsers.Add(new SongUser
-				{
-					SongsId = song.Id,
-					UserId = user.Id,
-				});
-			} else
-			{
-				return Results.BadRequest("User is already added!")
-			}
-			
-			try
-			{
-				_context.SaveChanges();
-				return Results.StatusCode((int)HttpStatusCode.Created);
-			}
-			catch (Exception ex)
-			{
-				return Results.BadRequest(ex);
-			}
+			return Results.Created();
 		}
-		
-		public ListSongViewModel[] GetAllSongConnectedToUser(int id)
+
+		public IResult AddSongToUser(int userId, Song song)
 		{
-			User? user = _context.Users
-				.Where(u => u.Id == id)
-				.Include(u => u.Songs)
-				.FirstOrDefault();
-
-			if (user == null)
-			{
-				return new ListSongViewModel[] { };
-			}
-
-
-			return user.Songs
-				.Select(s => new ListSongViewModel
-				{
-					SongTitle = s.SongTitle
-				}).ToArray();
-
+			throw new NotImplementedException();
 		}
-
 	}
 	}
 
