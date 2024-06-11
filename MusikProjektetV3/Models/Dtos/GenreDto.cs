@@ -6,8 +6,5 @@ namespace MusikProjektetV3.Models.Dtos
     {
         [JsonPropertyName("GenreName")]
         public string GenreName { get; set; }
-
-        [JsonPropertyName("UserId")]
-        public int UserId { get; set; }
     }
 }

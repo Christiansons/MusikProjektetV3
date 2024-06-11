@@ -23,6 +23,7 @@ namespace MusikProjektetV3
 			builder.Services.AddScoped<IUserRepository, UserRepository>();
 			builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 			builder.Services.AddScoped<IJunctionRepository, JunctionRepository>();
+			builder.Services.AddScoped<IGenreHandler, GenreHandler>();
 			
 			//Lägg handlers här
 			builder.Services.AddScoped<ISongHandler, SongHandler>();
@@ -41,29 +42,19 @@ namespace MusikProjektetV3
 
 			app.UseAuthorization();
 
-			var summaries = new[]
+			app.MapPost("/AddGenre", (IGenreHandler genrehandler, GenreDto dto) =>
 			{
-				"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-			};
+				return genrehandler.AddGenre(dto);
+			});
 
-			app.MapGet("/weatherforecast", (HttpContext httpContext) =>
+			app.MapGet("/GetGenresConnectedToPerson/{id}", (IGenreHandler genreHandler, int id) => 
+			{ 
+				return genreHandler.GetAllGenresConnectedToPerson(id);
+			});
+
+			app.MapPost("ConnectUserToGenre/{userId}/{genreId}", (IGenreHandler genreHandler, int userId, int genreId) =>
 			{
-				var forecast = Enumerable.Range(1, 5).Select(index =>
-					new WeatherForecast
-					{
-						Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-						TemperatureC = Random.Shared.Next(-20, 55),
-						Summary = summaries[Random.Shared.Next(summaries.Length)]
-					})
-					.ToArray();
-				return forecast;
-			})
-			.WithName("GetWeatherForecast")
-			.WithOpenApi();
-
-			app.MapPost("ConnectUserToSong/{userId}/{songId}", () =>
-			{
-
+				return genreHandler.ConnectUserToGenre(userId, genreId);
 			});
 
 			app.MapPost("/AddSong", (ISongHandler songHandler, AddSongDto dto) =>

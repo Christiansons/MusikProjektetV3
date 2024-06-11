@@ -8,7 +8,9 @@ namespace MusikProjektetV3.Repositories
 		Genre GetGenreByName(string genreName);
 		void AddGenre(Genre genre);
 		void SaveChanges();
-	}
+		Genre[] GetAllGenres();
+
+    }
 
 	public class GenreRepository : IGenreRepository
 	{
@@ -18,14 +20,21 @@ namespace MusikProjektetV3.Repositories
 			_context = context;
 		}
 
+		public Genre[] GetAllGenres()
+		{
+			return _context.Genres.ToArray();
+		}
+
 		public Genre GetGenreByName(string genreName)
 		{
 			return _context.Genres.Where(g => g.GenreName == genreName).First();
 		}
 
-		void AddGenre(Genre genre)
+
+		public void AddGenre(Genre genre)
 		{
 			_context.Genres.Add(genre);
+
 		}
 
 		public void SaveChanges()
@@ -33,9 +42,6 @@ namespace MusikProjektetV3.Repositories
 			_context.SaveChanges();
 		}
 
-		void IGenreRepository.AddGenre(Genre genre)
-		{
-			throw new NotImplementedException();
-		}
+
 	}
 }

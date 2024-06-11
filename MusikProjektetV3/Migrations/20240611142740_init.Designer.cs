@@ -11,7 +11,7 @@ using MusikProjektetV3.Data;
 namespace MusikProjektetV3.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240610140432_init")]
+    [Migration("20240611142740_init")]
     partial class init
     {
         /// <inheritdoc />
