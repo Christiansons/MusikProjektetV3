@@ -4,10 +4,12 @@ namespace MusikProjektetV3.Repositories
 {
 	public interface IArtistRepository
 	{
-		Artist GetArtistByName(string name);
+		Artist GetArtistByName(string artistName);
 		void AddArtist(Artist artist);
 		void SaveChanges();
+		Artist[] GetAllArtists();
 	}
+
 
 	public class ArtistRepository : IArtistRepository
 	{
@@ -22,9 +24,14 @@ namespace MusikProjektetV3.Repositories
 			_context.Artists.Add(artist);
 		}
 
+		public Artist[] GetAllArtists()
+		{
+			return _context.Artists.ToArray();
+		}
+
 		public Artist GetArtistByName(string artistName)
 		{
-			return _context.Artists.Where(a => a.ArtistName == artistName).First();
+			return _context.Artists.Where(a => a.ArtistName == artistName).FirstOrDefault();
 		}
 
 		public void SaveChanges()

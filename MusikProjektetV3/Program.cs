@@ -18,16 +18,17 @@ namespace MusikProjektetV3
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+			//Repos
 			builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 			builder.Services.AddScoped<ISongRepository, SongRepository>();
 			builder.Services.AddScoped<IUserRepository, UserRepository>();
 			builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 			builder.Services.AddScoped<IJunctionRepository, JunctionRepository>();
+			//Handlers
 			builder.Services.AddScoped<IGenreHandler, GenreHandler>();
 			builder.Services.AddScoped<IUserHandler, UserHandler>();
-			
-			//Lägg handlers här
 			builder.Services.AddScoped<ISongHandler, SongHandler>();
+
 
 			string connectionString = builder.Configuration.GetConnectionString("myConnection");
 			builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString));
@@ -48,6 +49,11 @@ namespace MusikProjektetV3
 				return genrehandler.AddGenre(dto);
 			});
 
+			app.MapPost("/AddArtist", (IArtistHandler artisthandler, ArtistDto dto) =>
+			{
+				return artisthandler.AddArtist(dto);
+			});
+
 			app.MapGet("/GetGenresConnectedToPerson/{id}", (IGenreHandler genreHandler, int id) => 
 			{ 
 				return genreHandler.GetAllGenresConnectedToPerson(id);
@@ -63,13 +69,19 @@ namespace MusikProjektetV3
 				return songHandler.AddSong(dto);
 			});
 
-			app.MapPost("/AddUser", (IUserHandler userHandler, UserDto dto) =>
+			app.MapPost("/GetOrCreateUser", (IUserHandler userHandler, UserDto dto) =>
 			{
-				return userHandler.AddUser(dto);
+				return userHandler.GetOrCreateUser(dto);
+			});
+
+			app.MapGet("/GetAllUsers", (IUserHandler userHander) =>
+			{
+				return userHander.GetAllUsers();
 			});
 
 
 			app.Run();
 		}
+
 	}
 }

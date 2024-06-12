@@ -27,21 +27,18 @@ namespace MusikProjektetV3.Repositories
 
 		public Genre GetGenreByName(string genreName)
 		{
-			return _context.Genres.Where(g => g.GenreName == genreName).First();
+			return _context.Genres.Where(g => g.GenreName == genreName).FirstOrDefault();
 		}
 
 
 		public void AddGenre(Genre genre)
 		{
 			_context.Genres.Add(genre);
-
 		}
 
 		public void SaveChanges()
 		{
 			_context.SaveChanges();
 		}
-
-
 	}
 }

@@ -1,11 +1,4 @@
-﻿using MusikProjektetV3.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using MusikProjektetV3.Models;
+﻿using MusikProjektetV3.Models;
 using System.Net;
 using MusikProjektetV3.Models.Dtos;
 using MusikProjektetV3.Models.ViewModels;
@@ -18,7 +11,7 @@ namespace MusikProjektetV3.Handlers
 	{
 		IResult GetArtist(string name);
 		IResult AddSong(AddSongDto addSongDto);
-		IResult AddSongToUser(int userId, Song song);
+		IResult AddSongToUser(int userId, int songId);
 		// Add other methods as needed, e.g., fetching similar songs
 	}
 
@@ -93,9 +86,22 @@ namespace MusikProjektetV3.Handlers
 			return Results.Created();
 		}
 
-		public IResult AddSongToUser(int userId, Song song)
+		public IResult AddSongToUser(int userId, int songId)
 		{
-			throw new NotImplementedException();
+			if (_junctionRepo.GetSpecificSongConnectedToUser(userId, songId) != null)
+			{
+				return Results.BadRequest("Song already added to your profile");
+			}
+			try
+			{
+				_junctionRepo.ConnectUserToSong(userId, songId);
+				_junctionRepo.SaveChanges();
+				return Results.Created();
+			}
+			catch (Exception ex)
+			{
+				return Results.BadRequest("error adding song: " + ex);
+			}
 		}
 	}
 	}

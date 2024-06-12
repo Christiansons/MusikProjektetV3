@@ -5,7 +5,9 @@ namespace MusikProjektetV3.Repositories
 {
 	public interface IUserRepository
 	{
+		User GetUser(string name);
 		void AddUser(User user);
+		ICollection<User> GetUsers();
 		void SaveChanges();
 	}
 
@@ -17,7 +19,10 @@ namespace MusikProjektetV3.Repositories
             _context = context;
         }
         
-		
+		public User GetUser(string name)
+		{
+			return _context.Users.Where(u => u.Name == name).FirstOrDefault();
+		}
 
 		public void AddUser(User user)
 		{
@@ -27,6 +32,11 @@ namespace MusikProjektetV3.Repositories
 		public void SaveChanges()
 		{
 			_context.SaveChanges();
+		}
+
+		public ICollection<User> GetUsers()
+		{
+			return _context.Users.ToList();
 		}
 	}
 }

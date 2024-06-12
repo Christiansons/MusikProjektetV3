@@ -43,12 +43,12 @@ namespace MusikProjektetV3.Handlers
             {
                 GenreName = genre.GenreName,
                 
-                //Artist = song.Artist,
             });
             try
             {
                 _genreRepo.SaveChanges();
-                return Results.StatusCode((int)HttpStatusCode.Created);
+                Genre genreToReturn = _genreRepo.GetGenreByName(genre.GenreName);
+                return Results.Json(genreToReturn);
             }
             catch (Exception ex)
             {
@@ -59,7 +59,7 @@ namespace MusikProjektetV3.Handlers
         public IResult ConnectUserToGenre(int userID, int genreID)
         {
             if(_junctionRepo.GetSpecificGenreConnectedToUser(userID, genreID) != null) 
-            { 
+            {
                 return Results.BadRequest("Already exists");
             }
             try
@@ -72,7 +72,6 @@ namespace MusikProjektetV3.Handlers
             {
                 return Results.BadRequest(ex);
             }
-
         }
 
         //GET /genre Hämta alla genrer i databasen
@@ -103,8 +102,6 @@ namespace MusikProjektetV3.Handlers
             {
                 return Results.Json(GenreList);
             }
-
-            return Results.Ok();
         }
 
     }

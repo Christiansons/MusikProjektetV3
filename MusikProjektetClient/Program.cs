@@ -1,9 +1,9 @@
-﻿
-
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text;
 using MusikProjektetClient.Models.Dtos;
-using MusikProjektetClient.Models.Dtos;
+using MusikProjektetClient.MenuService;
+using MusikProjektetClient.Services;
+using MusikProjektetClient.Helpers;
 
 namespace MusikProjektetClient
 {
@@ -11,32 +11,49 @@ namespace MusikProjektetClient
 	{
 		static async Task Main(string[] args)
 		{
-			Console.WriteLine("Login");
-			Console.WriteLine("Username:");
-			string Username = Console.ReadLine();
-            await AddArtistAsync(new UserDto { Name = Username});
+			HttpClient client = new HttpClient();
+			IUserService userService = new UserService(client);
+			IGenreService genreService = new GenreService(client);
+			IArtistService artistService = new ArtistService(client);
+			ISongService songService = new SongService(client, artistService, genreService);
+			IRecommendationService recommendationService = new RecommendationService(client);
 
+			SongMenu songMenu = new SongMenu(songService);
+			ArtistMenu artistMenu = new ArtistMenu(artistService);
+			GenreMenu genreMenu = new GenreMenu(genreService);
+			RecommendationMenu recommendationMenu = new RecommendationMenu(recommendationService);
+			
+			MainMenu mainMenu = new MainMenu(songMenu, artistMenu, genreMenu, recommendationMenu);
 
+			bool isLoggedIn = false;
+			while (!isLoggedIn)
+			{
+				string Username;
+				do
+				{
+					Console.WriteLine("Current users in system:");
+					await userService.GetAllUsersAsync();
+					Console.WriteLine("Login or create new user:");
+					Console.Write("Username:");
+					Username = Console.ReadLine();
+					Console.Clear();
+					
+				} while (string.IsNullOrEmpty(Username));
+				try
+				{
+					await userService.GetOrCreateUser(Username);
+                    isLoggedIn = true;
+				}
+				catch
+				{
+                    Console.WriteLine("Error logging in!");
+                }
+			}
+
+			while (isLoggedIn)
+			{
+				mainMenu.ShowMenu();
+			}
 		}
-
-        static async Task AddArtistAsync(UserDto user)
-        {
-            HttpClient client = new HttpClient();
-            try
-            {
-                var json = JsonSerializer.Serialize(user);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.PostAsync("http://localhost:5098/AddUser", content);
-                response.EnsureSuccessStatusCode();
-
-                string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseBody);
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine($"Error: {e.Message}");
-            }
-        }
     }
 }
