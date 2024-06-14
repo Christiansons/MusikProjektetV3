@@ -15,7 +15,7 @@ namespace MusikProjektetClient.MenuService
         {
             _songService = songService;
         }
-        internal async void ShowMenu()
+        public async Task ShowMenu()
 		{
 			
 			MenuHelper helper = new MenuHelper();
@@ -24,27 +24,28 @@ namespace MusikProjektetClient.MenuService
 			Console.WriteLine();
 
 			bool showmenu = true;
-			int choice = helper.FormatMenu(whatMenu, menu);
+			
 			while (showmenu)
 			{
+				int choice = await helper.FormatMenu(whatMenu, menu);
 				switch (choice.ToString())
 				{
 					case "1":
 						{
 							await _songService.AddSong();
-							MenuHelper.BackToMenu();
+							await helper.BackToMenu();
 							break;
 						}
 					case "2":
 						{
 							await _songService.AddSongToUser();
-							MenuHelper.BackToMenu();
+							await helper.BackToMenu();
 							break;
 						}
 					case "3":
 						{
 							await _songService.ShowAllSongsAddedToUser();
-							MenuHelper.BackToMenu();
+							await helper.BackToMenu();
 							break;
 						}
 					case "4":

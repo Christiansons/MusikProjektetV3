@@ -8,7 +8,7 @@ namespace MusikProjektetClient.Helpers
 {
 	public class MenuHelper
 	{
-		public int FormatMenu(string whatMenu, string[] options)
+		public async Task<int> FormatMenu(string whatMenu, string[] options)
 		{
 			ConsoleKeyInfo keyinfo;
 			int optionIndex = 0;
@@ -17,7 +17,7 @@ namespace MusikProjektetClient.Helpers
 			do
 			{
 				Console.Clear();
-				Console.WriteLine(whatMenu);
+				await Console.Out.WriteLineAsync(whatMenu);
                 Console.WriteLine();
 
                 for (int i = 0; i < optionsLength; i++)
@@ -25,12 +25,12 @@ namespace MusikProjektetClient.Helpers
 					if (i == optionIndex)
 					{
 						Console.ForegroundColor = ConsoleColor.Green;
-						Console.WriteLine(options[i]);
+						await Console.Out.WriteLineAsync(options[i]);
 						Console.ResetColor();
 					}
 					else
 					{
-						Console.WriteLine(options[i]);
+						await Console.Out.WriteLineAsync(options[i]);
 					}
 				}
 
@@ -50,9 +50,9 @@ namespace MusikProjektetClient.Helpers
 			return optionIndex+1;
 		}
 
-		public static void BackToMenu()
+		public async Task BackToMenu()
 		{
-            Console.WriteLine("Press any key to go back to menu");
+            await Console.Out.WriteLineAsync("Press any key to go back to menu");
 			Console.ReadKey();
 			Console.Clear();
         }

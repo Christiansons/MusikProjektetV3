@@ -16,7 +16,7 @@ namespace MusikProjektetClient.MenuService
             _artistService = artistService;
         }
 
-        internal static void ShowMenu()
+        internal async Task ShowMenu()
 		{
 			MenuHelper helper = new MenuHelper();
 			string[] menu = { "Add new artist to database", "Add an artist to your playlist", "Show all your liked artists", "Back to main menu" };
@@ -24,7 +24,7 @@ namespace MusikProjektetClient.MenuService
 			Console.WriteLine();
 
 			bool showmenu = true;
-			int choice = helper.FormatMenu(whatMenu, menu);
+			int choice = await helper.FormatMenu(whatMenu, menu);
 			while (showmenu)
 			{
 				switch (choice.ToString())

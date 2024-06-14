@@ -16,7 +16,7 @@ namespace MusikProjektetClient.MenuService
 			_genreService = genreService;
 		}
 
-		public static void ShowMenu()
+		public async Task ShowMenu()
 		{
 			MenuHelper helper = new MenuHelper();
 			string[] menu = { "Add new genre to database", "Add a genre to your playlist", "Show all your liked genres", "Back to main menu" };
@@ -24,7 +24,7 @@ namespace MusikProjektetClient.MenuService
 			Console.WriteLine();
 
 			bool showmenu = true;
-			int choice = helper.FormatMenu(whatMenu, menu);
+			int choice = await helper.FormatMenu(whatMenu, menu);
 			while (showmenu)
 			{
 				switch (choice.ToString())

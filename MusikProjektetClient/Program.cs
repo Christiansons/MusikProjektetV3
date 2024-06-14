@@ -55,7 +55,7 @@ namespace MusikProjektetClient
 
 			while (isLoggedIn)
 			{
-				mainMenu.ShowMenu();
+				await mainMenu.ShowMenu();
 			}
 		}
     }

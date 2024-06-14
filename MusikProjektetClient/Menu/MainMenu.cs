@@ -23,52 +23,57 @@ namespace MusikProjektetClient.MenuService
 			_menuHelper = menuHelper;
         }
 
-        public void ShowMenu()
+        public async Task ShowMenu()
 		{
             string[] menu = { "Genre menu", "Artist menu", "Song menu", "Get recommendations", "log out" };
 			string whatMenu = "Main menu";
             Console.WriteLine();
+			bool showMenu = true;
 
 			foreach (string item in menu)
 			{
                 Console.WriteLine(item);
             }
-			string choice = Console.ReadLine();
-
-            switch (choice.ToString())
-            {
-				case "1":
-					{
-						GenreMenu.ShowMenu();
-						break;
-					}
-				case "2":
-                    {
-						ArtistMenu.ShowMenu();
-						break;
-                    }
-				case "3":
-					{
-						_songMenu.ShowMenu();
-						break;
-					}
-				case "4":
-					{
-						_recommendationMenu.ShowMenu();
-						break;
-					}
-				case "5":
-					{
-						Environment.Exit(0);
-						break;
-					}
-				default:
-					{
-						Console.WriteLine("Invalid input!");
-						Console.Clear();
-						break;
-					}
+			
+			while (showMenu)
+			{
+				int choice = await _menuHelper.FormatMenu(whatMenu, menu);
+				switch (choice.ToString())
+				{
+					case "1":
+						{
+							await _genreMenu.ShowMenu();
+							break;
+						}
+					case "2":
+						{
+							await _artistMenu.ShowMenu();
+							break;
+						}
+					case "3":
+						{
+							await _songMenu.ShowMenu();
+							break;
+						}
+					case "4":
+						{
+							await _recommendationMenu.ShowMenu();
+							break;
+						}
+					case "5":
+						{
+							Environment.Exit(0);
+							break;
+						}
+					default:
+						{
+							Console.WriteLine("Invalid input!");
+							Console.Clear();
+							break;
+						}
+				}
 			}
+            
         }
 		
 
