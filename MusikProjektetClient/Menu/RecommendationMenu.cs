@@ -11,14 +11,15 @@ namespace MusikProjektetClient.MenuService
 	public class RecommendationMenu
 	{
 		public IRecommendationService _recommendationService;
-        public RecommendationMenu(IRecommendationService recommendationService)
+		public MenuHelper _menuHelper;
+        public RecommendationMenu(IRecommendationService recommendationService, MenuHelper menuHelper)
         {
             _recommendationService = recommendationService;
+			_menuHelper = menuHelper;
         }
 
         public async Task ShowMenu()
 		{
-			MenuHelper helper = new MenuHelper();
 			string[] menu = { "Get a song recommendation", "Get a artist recommendation", "back to main menu" };
 			string whatMenu = "Recommandation menu";
 			Console.WriteLine();
@@ -26,7 +27,7 @@ namespace MusikProjektetClient.MenuService
 			bool showmenu = true;
 			while (showmenu)
 			{
-				int choice = await helper.FormatMenu(whatMenu, menu);
+				int choice = await _menuHelper.FormatMenu(whatMenu, menu);
 				switch (choice.ToString())
 				{
 					case "1":

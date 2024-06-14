@@ -11,14 +11,15 @@ namespace MusikProjektetClient.MenuService
 	public class GenreMenu
 	{
 		private readonly IGenreService _genreService;
-		public GenreMenu(IGenreService genreService)
+		private readonly MenuHelper _menuHelper;
+		public GenreMenu(IGenreService genreService, MenuHelper menuHelper)
 		{
 			_genreService = genreService;
+			_menuHelper = menuHelper;
 		}
 
 		public async Task ShowMenu()
 		{
-			MenuHelper helper = new MenuHelper();
 			string[] menu = { "Add new genre to database", "Add a genre to your playlist", "Show all your liked genres", "Back to main menu" };
 			string whatMenu = "Genre menu";
 			Console.WriteLine();
@@ -27,12 +28,12 @@ namespace MusikProjektetClient.MenuService
 			
 			while (showmenu)
 			{
-				int choice = await helper.FormatMenu(whatMenu, menu);
+				int choice = await _menuHelper.FormatMenu(whatMenu, menu);
 				switch (choice.ToString())
 				{
 					case "1":
 						{
-							//_genreService.AddGenre();
+							await _genreService.AddGenre();
 							break;
 						}
 					case "2":

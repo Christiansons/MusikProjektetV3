@@ -11,14 +11,15 @@ namespace MusikProjektetClient.MenuService
 	public class ArtistMenu
 	{
 		private readonly IArtistService _artistService;
-        public ArtistMenu(IArtistService artistService)
+		private readonly MenuHelper _menuHelper;
+        public ArtistMenu(IArtistService artistService, MenuHelper menuHelper)
         {
             _artistService = artistService;
+			_menuHelper = menuHelper;
         }
 
         public async Task ShowMenu()
 		{
-			MenuHelper helper = new MenuHelper();
 			string[] menu = { "Add new artist to database", "Add an artist to your playlist", "Show all your liked artists", "Back to main menu" };
 			string whatMenu = "Artist menu";
 			Console.WriteLine();
@@ -27,12 +28,12 @@ namespace MusikProjektetClient.MenuService
 			
 			while (showmenu)
 			{
-				int choice = await helper.FormatMenu(whatMenu, menu);
+				int choice = await _menuHelper.FormatMenu(whatMenu, menu);
 				switch (choice.ToString())
 				{
 					case "1":
 						{
-							//_artistService.AddArtist();
+							await _artistService.AddArtist();
 							break;
 						}
 					case "2":

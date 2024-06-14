@@ -22,9 +22,9 @@ namespace MusikProjektetClient
 
 			MenuHelper menuHelper = new MenuHelper();
 			SongMenu songMenu = new SongMenu(songService, menuHelper);
-			ArtistMenu artistMenu = new ArtistMenu(artistService);
-			GenreMenu genreMenu = new GenreMenu(genreService);
-			RecommendationMenu recommendationMenu = new RecommendationMenu(recommendationService);
+			ArtistMenu artistMenu = new ArtistMenu(artistService, menuHelper);
+			GenreMenu genreMenu = new GenreMenu(genreService, menuHelper);
+			RecommendationMenu recommendationMenu = new RecommendationMenu(recommendationService, menuHelper);
 			
 			
 			MainMenu mainMenu = new MainMenu(songMenu, artistMenu, genreMenu, recommendationMenu, menuHelper);
