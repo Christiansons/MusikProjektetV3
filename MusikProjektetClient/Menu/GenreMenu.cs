@@ -24,9 +24,10 @@ namespace MusikProjektetClient.MenuService
 			Console.WriteLine();
 
 			bool showmenu = true;
-			int choice = await helper.FormatMenu(whatMenu, menu);
+			
 			while (showmenu)
 			{
+				int choice = await helper.FormatMenu(whatMenu, menu);
 				switch (choice.ToString())
 				{
 					case "1":

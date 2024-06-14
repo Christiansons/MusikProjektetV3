@@ -11,7 +11,7 @@ namespace MusikProjektetClient.Services
 {
 	public interface IGenreService
 	{
-		Task<Genre> AddGenre(string? genreName);
+		Task<Genre> AddGenre();
 	}
 	public class GenreService : IGenreService
 	{
@@ -24,8 +24,13 @@ namespace MusikProjektetClient.Services
 			_httpClient.BaseAddress = new Uri(baseAddress);
 		}
 
-        public async Task<Genre> AddGenre(string? genreName)
+        public async Task<Genre> AddGenre()
 		{
+			Console.Clear();
+			Console.WriteLine("Add a new song to the database!");
+			Console.WriteLine("Whats the genre?");
+			Console.Write("Genre: ");
+			string genreName = Console.ReadLine();
 			GenreDto genreDto = new GenreDto()
 			{
 				GenreName = genreName

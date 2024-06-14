@@ -11,14 +11,14 @@ namespace MusikProjektetClient.MenuService
 	public class SongMenu
 	{
 		private readonly ISongService _songService;
-        public SongMenu(ISongService songService)
+		private readonly MenuHelper _menuHelper;
+        public SongMenu(ISongService songService, MenuHelper menuHelper)
         {
             _songService = songService;
+			_menuHelper = menuHelper;
         }
         public async Task ShowMenu()
 		{
-			
-			MenuHelper helper = new MenuHelper();
 			string[] menu = { "Add new song to database", "Add a song to your playlist", "Show all songs added to your playlist", "Back to main menu" };
 			string whatMenu = "Song menu";
 			Console.WriteLine();
@@ -27,25 +27,25 @@ namespace MusikProjektetClient.MenuService
 			
 			while (showmenu)
 			{
-				int choice = await helper.FormatMenu(whatMenu, menu);
+				int choice = await _menuHelper.FormatMenu(whatMenu, menu);
 				switch (choice.ToString())
 				{
 					case "1":
 						{
 							await _songService.AddSong();
-							await helper.BackToMenu();
+							await _menuHelper.BackToMenu();
 							break;
 						}
 					case "2":
 						{
 							await _songService.AddSongToUser();
-							await helper.BackToMenu();
+							await _menuHelper.BackToMenu();
 							break;
 						}
 					case "3":
 						{
 							await _songService.ShowAllSongsAddedToUser();
-							await helper.BackToMenu();
+							await _menuHelper.BackToMenu();
 							break;
 						}
 					case "4":

@@ -19,7 +19,7 @@ namespace MusikProjektetClient.MenuService
         public async Task ShowMenu()
 		{
 			MenuHelper helper = new MenuHelper();
-			string[] menu = { "Get a song recommendation", "Get a genre recommendation", "Get a artist recommendation", "back to main menu" };
+			string[] menu = { "Get a song recommendation", "Get a artist recommendation", "back to main menu" };
 			string whatMenu = "Recommandation menu";
 			Console.WriteLine();
 
@@ -36,15 +36,10 @@ namespace MusikProjektetClient.MenuService
 						}
 					case "2":
 						{
-							await _recommendationService.GetSimilarGenresAsync();
-							break;
-						}
-					case "3":
-						{
 							await _recommendationService.GetSimilarArtistsAsync();
 							break;
 						}
-					case "4":
+					case "3":
 						{
 							showmenu = false;
 							break;

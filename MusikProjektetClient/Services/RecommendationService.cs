@@ -89,7 +89,6 @@ namespace MusikProjektetClient.Services
                 await Console.Out.WriteLineAsync(artist.name);
             }
 
-			await Console.Out.WriteLineAsync("Stopp!");
 			Console.ReadLine();
 			
 		}

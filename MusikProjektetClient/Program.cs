@@ -20,11 +20,12 @@ namespace MusikProjektetClient
 			ISongService songService = new SongService(client, artistService, genreService);
 			IRecommendationService recommendationService = new RecommendationService(lastFmClient);
 
-			SongMenu songMenu = new SongMenu(songService);
+			MenuHelper menuHelper = new MenuHelper();
+			SongMenu songMenu = new SongMenu(songService, menuHelper);
 			ArtistMenu artistMenu = new ArtistMenu(artistService);
 			GenreMenu genreMenu = new GenreMenu(genreService);
 			RecommendationMenu recommendationMenu = new RecommendationMenu(recommendationService);
-			MenuHelper menuHelper = new MenuHelper();
+			
 			
 			MainMenu mainMenu = new MainMenu(songMenu, artistMenu, genreMenu, recommendationMenu, menuHelper);
 

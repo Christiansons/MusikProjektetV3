@@ -11,7 +11,7 @@ namespace MusikProjektetClient.Services
 {
 	public interface IArtistService
 	{
-		Task<Artist> AddArtist(string? artistDescription, string artistName);
+		Task<Artist> AddArtist();
 	}
 	public class ArtistService : IArtistService
 	{
@@ -24,8 +24,13 @@ namespace MusikProjektetClient.Services
 			_httpClient.BaseAddress = new Uri(baseAddress);
 		}
 
-		public async Task<Artist> AddArtist(string? artistDescription, string artistName)
+		public async Task<Artist> AddArtist()
 		{
+			Console.WriteLine("Whats the artist?");
+			Console.Write("Artist: ");
+			string artistName = Console.ReadLine();
+			Console.Write("Write a short description of the artist: ");
+			string artistDescription = Console.ReadLine();
 			ArtistDto artistDto = new ArtistDto()
 			{
 				artistDescription = artistDescription,

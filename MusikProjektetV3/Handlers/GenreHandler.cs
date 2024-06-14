@@ -37,13 +37,19 @@ namespace MusikProjektetV3.Handlers
             _genreRepo = genreRepo;
             _junctionRepo = junctionRepo;
         }
-        public IResult AddGenre(GenreDto genre)
+        public IResult AddGenre(GenreDto genreDto)
         {
-            _genreRepo.AddGenre(new Genre
+            Genre genre = _genreRepo.GetGenreByName(genreDto.GenreName);
+
+            if(genre == null)
             {
-                GenreName = genre.GenreName,
-                
-            });
+                genre = new Genre()
+                {
+                    GenreName = genreDto.GenreName,
+                };
+                _genreRepo.AddGenre(genre);
+			}
+           
             try
             {
                 _genreRepo.SaveChanges();
