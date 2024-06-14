@@ -28,12 +28,13 @@ namespace MusikProjektetClient.MenuService
 			
 			while (showmenu)
 			{
-				int choice = await _menuHelper.FormatMenu(whatMenu, menu);
+				int choice = await  _menuHelper.FormatMenu(whatMenu, menu);
 				switch (choice.ToString())
 				{
 					case "1":
 						{
 							await _genreService.AddGenre();
+							await _menuHelper.BackToMenu();
 							break;
 						}
 					case "2":

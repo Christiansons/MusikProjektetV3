@@ -17,6 +17,7 @@ namespace MusikProjektetClient.MenuService
             _songService = songService;
 			_menuHelper = menuHelper;
         }
+
         public async Task ShowMenu()
 		{
 			string[] menu = { "Add new song to database", "Add a song to your playlist", "Show all songs added to your playlist", "Back to main menu" };
