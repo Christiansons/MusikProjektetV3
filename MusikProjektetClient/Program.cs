@@ -12,18 +12,21 @@ namespace MusikProjektetClient
 		static async Task Main(string[] args)
 		{
 			HttpClient client = new HttpClient();
+			HttpClient lastFmClient = new HttpClient();
+
 			IUserService userService = new UserService(client);
 			IGenreService genreService = new GenreService(client);
 			IArtistService artistService = new ArtistService(client);
 			ISongService songService = new SongService(client, artistService, genreService);
-			IRecommendationService recommendationService = new RecommendationService(client);
+			IRecommendationService recommendationService = new RecommendationService(lastFmClient);
 
 			SongMenu songMenu = new SongMenu(songService);
 			ArtistMenu artistMenu = new ArtistMenu(artistService);
 			GenreMenu genreMenu = new GenreMenu(genreService);
 			RecommendationMenu recommendationMenu = new RecommendationMenu(recommendationService);
+			MenuHelper menuHelper = new MenuHelper();
 			
-			MainMenu mainMenu = new MainMenu(songMenu, artistMenu, genreMenu, recommendationMenu);
+			MainMenu mainMenu = new MainMenu(songMenu, artistMenu, genreMenu, recommendationMenu, menuHelper);
 
 			bool isLoggedIn = false;
 			while (!isLoggedIn)

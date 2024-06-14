@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MusikProjektetClient.Helpers
 {
-	internal class MenuHelper
+	public class MenuHelper
 	{
 		public int FormatMenu(string whatMenu, string[] options)
 		{
@@ -49,6 +49,13 @@ namespace MusikProjektetClient.Helpers
 
 			return optionIndex+1;
 		}
+
+		public static void BackToMenu()
+		{
+            Console.WriteLine("Press any key to go back to menu");
+			Console.ReadKey();
+			Console.Clear();
+        }
 
 			//public static void FormatList()
 			//{

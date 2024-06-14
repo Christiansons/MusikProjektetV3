@@ -8,12 +8,14 @@ namespace MusikProjektetV3.Repositories
 	{
 		GenreUser[] GetAllGenresConnectedToPerson(int id);
 		GenreUser GetSpecificGenreConnectedToUser(int userId, int genreId);
+
+		SongUser[] GetAllSongsConnectedToUser(int userId);
 		SongUser GetSpecificSongConnectedToUser(int userId, int songId);
 
 		ArtistUser[] GetAllArtistsConnectedToPerson(int userId);
 		ArtistUser GetSpecificArtistConnectedToUser(int userId, int artistId);
+		
 		void ConnectUserToArtist(int userId, int artistId);
-
 		void ConnectUserToSong(int userId, int songId);
 		void ConnectUserToGenre(int userId, int genreId);
         void SaveChanges();
@@ -75,6 +77,11 @@ namespace MusikProjektetV3.Repositories
 		public void SaveChanges()
 		{
 			_context.SaveChanges();
+		}
+
+		public SongUser[] GetAllSongsConnectedToUser(int userId)
+		{
+			return _context.SongUsers.Where(x => x.UserId == userId).ToArray();
 		}
 	}
 }

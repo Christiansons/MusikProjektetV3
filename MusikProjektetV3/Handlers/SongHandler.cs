@@ -4,15 +4,15 @@ using MusikProjektetV3.Models.Dtos;
 using MusikProjektetV3.Models.ViewModels;
 using System.Text.Json;
 using MusikProjektetV3.Repositories;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MusikProjektetV3.Handlers
 {
 	public interface ISongHandler
 	{
-		IResult GetArtist(string name);
 		IResult AddSong(AddSongDto addSongDto);
-		IResult AddSongToUser(int userId, int songId);
-		// Add other methods as needed, e.g., fetching similar songs
+		IResult AddSongToUser(SongConnectionDto dto);
+		IResult GetAllSongsConnectedToUser(int userId);
 	}
 
 	public class SongHandler : ISongHandler
@@ -86,23 +86,79 @@ namespace MusikProjektetV3.Handlers
 			return Results.Created();
 		}
 
-		public IResult AddSongToUser(int userId, int songId)
+		public IResult AddSongToUser(SongConnectionDto connectionDto)
 		{
-			if (_junctionRepo.GetSpecificSongConnectedToUser(userId, songId) != null)
+			
+			int? songIdCheck = _songRepo.GetSongId(connectionDto.songName);
+			int songId = 0;
+			
+			//See if the song exists in database
+			if (songIdCheck.HasValue)
+			{
+				songId = songIdCheck.Value;
+			}
+			else
+			{
+				return Results.NotFound("No song with that title added!");
+			}
+
+			//If the connection already exists
+			if (_junctionRepo.GetSpecificSongConnectedToUser(connectionDto.userId, songId) != null)
 			{
 				return Results.BadRequest("Song already added to your profile");
 			}
+
+			//Add the user to the song
 			try
 			{
-				_junctionRepo.ConnectUserToSong(userId, songId);
+				_junctionRepo.ConnectUserToSong(connectionDto.userId, songId);
 				_junctionRepo.SaveChanges();
-				return Results.Created();
+				return Results.Ok("Song added to your profile");
 			}
 			catch (Exception ex)
 			{
 				return Results.BadRequest("error adding song: " + ex);
 			}
 		}
+
+		public IResult GetAllSongsConnectedToUser(int userId)
+		{
+			//See if there are any songs in the database
+			var songs = _songRepo.GetAllSongs();
+			if (songs == null)
+			{
+				return Results.NotFound("No songs found in the database.");
+			}
+
+			//Che
+			var relationTables = _junctionRepo.GetAllSongsConnectedToUser(userId);
+			if (relationTables == null)
+			{
+				return Results.NotFound("No relations found for the user.");
+			}
+
+			var songList = new GetAllSongsConnectedToUserViewModel();
+
+			foreach (var relationTable in relationTables)
+			{
+				foreach (var song in songs)
+				{
+					if (relationTable.SongsId == song.Id)
+					{
+						songList.SongNames.Add(song.SongTitle);
+					}
+				}
+			}
+
+			if (songList.SongNames.IsNullOrEmpty())
+			{
+				return Results.NotFound("No songs added");
+			}
+			else
+			{
+				return Results.Json(songList);
+			}
+		}
 	}
-	}
+}
 

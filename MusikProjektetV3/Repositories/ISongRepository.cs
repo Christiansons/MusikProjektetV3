@@ -9,10 +9,10 @@ namespace MusikProjektetV3.Repositories
 	public interface ISongRepository
 	{
 		void AddSong(Song song);
-		ListSongViewModel[] GetAllSongConnectedToUser(int id);
+		AllSongsViewModel[] GetAllSongConnectedToUser(int id);
 		void ConnectUserToSong(int userId, int songId);
-		//Artist GetOrCreateArtist(ArtistDto dto);
-		Genre GetOrCreateGenre(GenreDto dto);
+		int? GetSongId(string songName);
+		Song[] GetAllSongs();
 		void SaveChanges();
 	}
 
@@ -45,19 +45,31 @@ namespace MusikProjektetV3.Repositories
 			_context.SaveChanges();
 		}
 
-		public ListSongViewModel[] GetAllSongConnectedToUser(int id)
+		public AllSongsViewModel[] GetAllSongConnectedToUser(int id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Genre GetOrCreateGenre(GenreDto dto)
+		public int? GetSongId(string songName)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				return _context.Songs.Where(s => s.SongTitle == songName).FirstOrDefault().Id;
+			}
+			catch
+			{
+				return null;
+			}
 		}
 
 		public void SaveChanges()
 		{
 			_context.SaveChanges();
+		}
+
+		public Song[] GetAllSongs()
+		{
+			return _context.Songs.ToArray();
 		}
 	}
 }

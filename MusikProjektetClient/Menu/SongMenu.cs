@@ -32,16 +32,19 @@ namespace MusikProjektetClient.MenuService
 					case "1":
 						{
 							await _songService.AddSong();
+							MenuHelper.BackToMenu();
 							break;
 						}
 					case "2":
 						{
-							SongService.AddSongToUser();
+							await _songService.AddSongToUser();
+							MenuHelper.BackToMenu();
 							break;
 						}
 					case "3":
 						{
-							SongService.ShowAllSongsAddedToUser();
+							await _songService.ShowAllSongsAddedToUser();
+							MenuHelper.BackToMenu();
 							break;
 						}
 					case "4":
@@ -58,5 +61,7 @@ namespace MusikProjektetClient.MenuService
 				}
 			}
 		}
+
+		
 	}
 }

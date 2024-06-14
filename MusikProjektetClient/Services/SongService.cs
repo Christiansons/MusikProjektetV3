@@ -1,5 +1,6 @@
 ﻿using MusikProjektetClient.Models;
 using MusikProjektetClient.Models.Dtos;
+using MusikProjektetClient.Models.ViewModels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -9,6 +10,8 @@ namespace MusikProjektetClient.Services
 	public interface ISongService
 	{
 		Task AddSong();
+		Task AddSongToUser();
+		Task ShowAllSongsAddedToUser();
 	}
 
 	public class SongService : ISongService
@@ -27,8 +30,8 @@ namespace MusikProjektetClient.Services
 
 		public async Task AddSong()
 		{
-
-            Console.WriteLine("Add a new song!");
+			Console.Clear();
+            Console.WriteLine("Add a new song to the database!");
 			Console.WriteLine("Whats the genre?");
 			Console.Write("Genre: ");
 			string genreName = Console.ReadLine();
@@ -60,14 +63,55 @@ namespace MusikProjektetClient.Services
 			response.EnsureSuccessStatusCode();
 		}
 
-		internal static void AddSongToUser()
+		public async Task AddSongToUser()
 		{
-			throw new NotImplementedException();
-		}
+			Console.Clear();
+			Console.WriteLine("Add a song to your favorites (make sure its added to the database first)");
+			Console.WriteLine("Whats the song title?");
+			Console.Write("title: ");
+			string songTitle = Console.ReadLine();
 
-		internal static void ShowAllSongsAddedToUser()
+			SongConnectionDto dto = new SongConnectionDto
+			{
+				songName = songTitle,
+				userId = GlobalLoginVariable.UserId
+			};
+
+			string json = JsonSerializer.Serialize(dto);
+			StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+			HttpResponseMessage response = await _httpClient.PostAsync("/ConnectUserToSong", content);
+
+            Console.WriteLine(response.Content.ToString());
+			Console.WriteLine("Press any key to go back to main menu");
+			Console.ReadKey();
+        }
+
+
+		public async Task ShowAllSongsAddedToUser()
 		{
-			throw new NotImplementedException();
+			Console.Clear();
+			HttpResponseMessage response = await _httpClient.GetAsync($"/GetAllSongsConnectedToUser/{GlobalLoginVariable.UserId}");
+			if (response.IsSuccessStatusCode)
+			{
+				var songList = await JsonSerializer.DeserializeAsync<GetAllSongsConnectedToUserViewModel>(await response.Content.ReadAsStreamAsync());
+				if (songList != null && songList.SongNames.Count > 0)
+				{
+					Console.WriteLine("Songs added to user:");
+					foreach (var songName in songList.SongNames)
+					{
+						Console.WriteLine(songName);
+					}
+				}
+				else
+				{
+					Console.WriteLine("No songs added to this user.");
+				}
+			}
+			else
+			{
+				Console.WriteLine($"Failed to retrieve songs. Status code: {response.StatusCode}");
+			}
 		}
 	}
 }

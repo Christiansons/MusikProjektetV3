@@ -28,6 +28,8 @@ namespace MusikProjektetV3
 			builder.Services.AddScoped<IGenreHandler, GenreHandler>();
 			builder.Services.AddScoped<IUserHandler, UserHandler>();
 			builder.Services.AddScoped<ISongHandler, SongHandler>();
+			builder.Services.AddScoped<IArtistHandler, ArtistHandler>();
+			builder.Services.AddScoped<IJunctionRepository, JunctionRepository>();
 
 
 			string connectionString = builder.Configuration.GetConnectionString("myConnection");
@@ -79,6 +81,15 @@ namespace MusikProjektetV3
 				return userHander.GetAllUsers();
 			});
 
+			app.MapPost("/ConnectUserToSong", (ISongHandler SongHandler, SongConnectionDto dto) =>
+			{
+				return SongHandler.AddSongToUser(dto);
+			});
+
+			app.MapGet("/GetSongsConnectedToUser/{userId}", (ISongHandler songHandler, int userId) =>
+			{
+				return songHandler.GetAllSongsConnectedToUser(userId);
+			});
 
 			app.Run();
 		}

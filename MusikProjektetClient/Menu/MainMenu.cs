@@ -13,22 +13,27 @@ namespace MusikProjektetClient.MenuService
 		private readonly ArtistMenu _artistMenu;
 		private readonly GenreMenu _genreMenu;
 		private readonly RecommendationMenu _recommendationMenu;
-        public MainMenu(SongMenu songMenu, ArtistMenu artistMenu, GenreMenu genreMenu, RecommendationMenu recommendationMenu)
+		private readonly MenuHelper _menuHelper;
+        public MainMenu(SongMenu songMenu, ArtistMenu artistMenu, GenreMenu genreMenu, RecommendationMenu recommendationMenu, MenuHelper menuHelper)
         {
 			_songMenu = songMenu;
 			_artistMenu = artistMenu;
 			_genreMenu = genreMenu;
 			_recommendationMenu = recommendationMenu;
+			_menuHelper = menuHelper;
         }
 
         public void ShowMenu()
 		{
-			MenuHelper helper = new MenuHelper();
             string[] menu = { "Genre menu", "Artist menu", "Song menu", "Get recommendations", "log out" };
 			string whatMenu = "Main menu";
             Console.WriteLine();
-            
-			int choice = helper.FormatMenu(whatMenu, menu);
+
+			foreach (string item in menu)
+			{
+                Console.WriteLine(item);
+            }
+			string choice = Console.ReadLine();
 
             switch (choice.ToString())
             {
@@ -49,7 +54,7 @@ namespace MusikProjektetClient.MenuService
 					}
 				case "4":
 					{
-						RecommendationMenu.ShowMenu();
+						_recommendationMenu.ShowMenu();
 						break;
 					}
 				case "5":

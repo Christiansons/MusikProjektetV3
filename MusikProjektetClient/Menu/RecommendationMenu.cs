@@ -16,7 +16,7 @@ namespace MusikProjektetClient.MenuService
             _recommendationService = recommendationService;
         }
 
-        public static void ShowMenu()
+        public async void ShowMenu()
 		{
 			MenuHelper helper = new MenuHelper();
 			string[] menu = { "Get a song recommendation", "Get a genre recommendation", "Get a artist recommendation", "back to main menu" };
@@ -24,24 +24,28 @@ namespace MusikProjektetClient.MenuService
 			Console.WriteLine();
 
 			bool showmenu = true;
-			int choice = helper.FormatMenu(whatMenu, menu);
+			foreach (string item in menu)
+			{
+				Console.WriteLine(item);
+			}
+			string choice = Console.ReadLine();
 			while (showmenu)
 			{
 				switch (choice.ToString())
 				{
 					case "1":
 						{
-							SongService.AddSong();
+							await _recommendationService.GetSimilarSongsAsync();
 							break;
 						}
 					case "2":
 						{
-							SongService.AddSongToUser();
+							await _recommendationService.GetSimilarGenresAsync();
 							break;
 						}
 					case "3":
 						{
-							SongService.ShowAllSongsAddedToUser();
+							await _recommendationService.GetSimilarArtistsAsync();
 							break;
 						}
 					case "4":

@@ -36,12 +36,12 @@ namespace MusikProjektetClient.MenuService
 						}
 					case "2":
 						{
-							SongService.AddSongToUser();
+							//_genreService.AddGenreToUser();
 							break;
 						}
 					case "3":
 						{
-							SongService.ShowAllSongsAddedToUser();
+							//_genreService.ShowAllGenresConnectedToUser();
 							break;
 						}
 					case "4":
