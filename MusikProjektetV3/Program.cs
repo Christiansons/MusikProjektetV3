@@ -71,9 +71,9 @@ namespace MusikProjektetV3
                 return artistHandler.ConnectUserToArtist(artistconnectdto.UsersId, artistconnectdto.ArtistsId);
             });
 
-			app.MapGet("/GetArtistsConnectedToUser", (IArtistHandler artisthandler, ArtistDto artistdto) =>
+			app.MapGet("/GetArtistsConnectedToUser/{userId}", (IArtistHandler artisthandler, int userId) =>
 			{
-
+				return artisthandler.GetAllArtistsConnectedToPerson(userId);
 			});
 
             app.MapPost("/AddSong", (ISongHandler songHandler, AddSongDto dto) =>

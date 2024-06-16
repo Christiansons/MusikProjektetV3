@@ -92,23 +92,23 @@ namespace MusikProjektetClient.Services
 		public async Task ShowAllArtistsAddedToUser()
 		{
             Console.Clear();
-            HttpResponseMessage response = await _httpClient.GetAsync($"/GetArtistsConnectedToPerson/{GlobalLoginVariable.UserId}");
+            HttpResponseMessage response = await _httpClient.GetAsync($"/GetArtistsConnectedToUser/{GlobalLoginVariable.UserId}");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"Failed to retrieve Genres. Status code: {response.StatusCode}");
                 return;
             }
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            var genreList = JsonSerializer.Deserialize<GetAllArtistsConnectedToPersonViewModel>(jsonResponse);
-            if (genreList.GenreNames.Count == 0)
+            var artistList = JsonSerializer.Deserialize<GetAllArtistsConnectedToPersonViewModel>(jsonResponse);
+            if (artistList.ArtistNames.Count == 0)
             {
-                Console.WriteLine("No songs added to this user.");
+                Console.WriteLine("No Artists added to this user.");
                 return;
             }
-            Console.WriteLine("Songs added to user:");
-            foreach (var genrename in genreList.GenreNames)
+            Console.WriteLine("Artists added to user:");
+            foreach (var artistName in artistList.ArtistNames)
             {
-                Console.WriteLine(genrename);
+                Console.WriteLine(artistName);
             }
         }
     }

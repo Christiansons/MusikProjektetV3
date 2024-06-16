@@ -34,6 +34,7 @@ namespace MusikProjektetClient.MenuService
 					case "1":
 						{
 							await _artistService.AddArtist();
+							await _menuHelper.BackToMenu();
 							break;
 						}
 					case "2":
@@ -44,7 +45,8 @@ namespace MusikProjektetClient.MenuService
 						}
 					case "3":
 						{
-							_artistService.ShowAllArtistsAddedToUser();
+							await _artistService.ShowAllArtistsAddedToUser();
+							await _menuHelper.BackToMenu();
 							break;
 						}
 					case "4":

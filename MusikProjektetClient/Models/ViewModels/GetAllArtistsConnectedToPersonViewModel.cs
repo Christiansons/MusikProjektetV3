@@ -1,7 +1,10 @@
-﻿namespace MusikProjektetV3.Models.ViewModels
+﻿using System.Text.Json.Serialization;
+
+namespace MusikProjektetClient.Models.ViewModels
 {
 	public class GetAllArtistsConnectedToPersonViewModel
 	{
-		public List<string>? ArtistNames { get; set; } = new List<string>();
+		[JsonPropertyName("artistNames")]
+		public List<string> ArtistNames { get; set; } = new List<string>();
 	}
 }

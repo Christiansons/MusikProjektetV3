@@ -54,7 +54,7 @@ namespace MusikProjektetClient.Helpers
 		{
             await Console.Out.WriteLineAsync("Press any key to go back to menu");
 			Console.ReadKey();
-			Console.Clear();
+			Console.Clear(); 
         }
 
 			//public static void FormatList()

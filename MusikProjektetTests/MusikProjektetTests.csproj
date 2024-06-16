@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MusikProjektetClient\MusikProjektetClient.csproj" />
     <ProjectReference Include="..\MusikProjektetV3\MusikProjektetV3.csproj" />
   </ItemGroup>
 
