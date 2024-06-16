@@ -35,21 +35,29 @@ namespace MusikProjektetV3.Handlers
 
 		public IResult AddArtist(ArtistDto dto)
 		{
-			_artistRepo.AddArtist(new Artist
+			Artist artist = _artistRepo.GetArtistByName(dto.artistName);
+
+			if(artist == null)
 			{
-				Description = dto.artistDescription,
-				ArtistName = dto.artistName
-			});
-			try
-			{
-				_artistRepo.SaveChanges();
-				Artist artistToReturn = _artistRepo.GetArtistByName(dto.artistName);
-				return Results.Json(artistToReturn);
-			}
-			catch (Exception ex)
-			{
-				return Results.BadRequest(ex);
-			}
+                _artistRepo.AddArtist(new Artist
+                {
+                    Description = dto.artistDescription,
+                    ArtistName = dto.artistName
+                });
+                try
+                {
+                    _artistRepo.SaveChanges();
+                    Artist artistToReturn = _artistRepo.GetArtistByName(dto.artistName);
+                    return Results.Json(artistToReturn);
+                }
+                catch (Exception ex)
+                {
+                    return Results.BadRequest(ex);
+                }
+            }
+
+			return Results.Json(artist);
+			
 		}
 
 		public IResult ConnectUserToArtist(int userId, int artistId)

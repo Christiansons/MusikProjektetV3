@@ -40,12 +40,17 @@ namespace MusikProjektetClient.MenuService
 					case "2":
 						{
 							//_genreService.AddGenreToUser();
+							await _genreService.AddGenreToUser();
+							await _menuHelper.BackToMenu();
 							break;
 						}
 					case "3":
 						{
 							//_genreService.ShowAllGenresConnectedToUser();
-							break;
+							await _genreService.ShowAllGenreConnectedToUser();
+							await _menuHelper.BackToMenu();
+
+                            break;
 						}
 					case "4":
 						{

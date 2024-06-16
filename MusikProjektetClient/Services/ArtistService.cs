@@ -1,5 +1,6 @@
 ﻿using MusikProjektetClient.Models;
 using MusikProjektetClient.Models.Dtos;
+using MusikProjektetClient.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,9 @@ namespace MusikProjektetClient.Services
 	public interface IArtistService
 	{
 		Task<Artist> AddArtist();
-	}
+		Task AddArtistToUser();
+		Task ShowAllArtistsAddedToUser();
+    }
 	public class ArtistService : IArtistService
 	{
 		string baseAddress = "http://localhost:5098";
@@ -47,5 +50,66 @@ namespace MusikProjektetClient.Services
 			Artist artist = await JsonSerializer.DeserializeAsync<Artist>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 			return artist;
 		}
-	}
+
+		public async Task AddArtistToUser()
+		{
+            Console.Clear();
+            Console.WriteLine("Add a Artist to User");
+            Console.WriteLine("Whos the Artist?");
+            Console.Write("Artist: ");
+            string artistname = Console.ReadLine();
+            ArtistDto artistDto = new ArtistDto()
+            {
+                artistName = artistname
+            };
+
+
+
+            string json = JsonSerializer.Serialize(artistDto, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            StringContent userID = new StringContent(GlobalLoginVariable.UserId.ToString(), Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _httpClient.PostAsync("/AddArtist", content);
+            Artist artist = await JsonSerializer.DeserializeAsync<Artist>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+			ArtistConnectionDto connectcontent = new ArtistConnectionDto()
+            {
+                UsersId = GlobalLoginVariable.UserId,
+				ArtistsId = artist.Id
+            };
+
+            string connectcontentseri = JsonSerializer.Serialize<ArtistConnectionDto>(connectcontent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            StringContent connectioncontent = new StringContent(connectcontentseri, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage connectResponse = await _httpClient.PostAsync($"/ConnectUserToArtist", connectioncontent);
+
+            response.EnsureSuccessStatusCode();
+
+
+			await Console.Out.WriteLineAsync("Artist added");
+        }
+
+		public async Task ShowAllArtistsAddedToUser()
+		{
+            Console.Clear();
+            HttpResponseMessage response = await _httpClient.GetAsync($"/GetArtistsConnectedToPerson/{GlobalLoginVariable.UserId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Failed to retrieve Genres. Status code: {response.StatusCode}");
+                return;
+            }
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            var genreList = JsonSerializer.Deserialize<GetAllArtistsConnectedToPersonViewModel>(jsonResponse);
+            if (genreList.GenreNames.Count == 0)
+            {
+                Console.WriteLine("No songs added to this user.");
+                return;
+            }
+            Console.WriteLine("Songs added to user:");
+            foreach (var genrename in genreList.GenreNames)
+            {
+                Console.WriteLine(genrename);
+            }
+        }
+    }
 }

@@ -38,12 +38,13 @@ namespace MusikProjektetClient.MenuService
 						}
 					case "2":
 						{
-							//_artistService.AddArtistToUser();
+							await _artistService.AddArtistToUser();
+							await _menuHelper.BackToMenu();
 							break;
 						}
 					case "3":
 						{
-							//_artistService.ShowAllArtistsAddedToUser();
+							_artistService.ShowAllArtistsAddedToUser();
 							break;
 						}
 					case "4":

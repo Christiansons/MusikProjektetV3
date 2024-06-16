@@ -61,12 +61,22 @@ namespace MusikProjektetV3
 				return genreHandler.GetAllGenresConnectedToPerson(id);
 			});
 
-			app.MapPost("ConnectUserToGenre/{userId}/{genreId}", (IGenreHandler genreHandler, int userId, int genreId) =>
+			app.MapPost("/ConnectUserToGenre", (IGenreHandler genreHandler, GenreConnectionDto genreconnectdto) =>
 			{
-				return genreHandler.ConnectUserToGenre(userId, genreId);
+				return genreHandler.ConnectUserToGenre(genreconnectdto.UsersId, genreconnectdto.GenresId);
 			});
 
-			app.MapPost("/AddSong", (ISongHandler songHandler, AddSongDto dto) =>
+            app.MapPost("/ConnectUserToArtist", (IArtistHandler artistHandler, ArtistConnectionDto artistconnectdto) =>
+            {
+                return artistHandler.ConnectUserToArtist(artistconnectdto.UsersId, artistconnectdto.ArtistsId);
+            });
+
+			app.MapGet("/GetArtistsConnectedToUser", (IArtistHandler artisthandler, ArtistDto artistdto) =>
+			{
+
+			});
+
+            app.MapPost("/AddSong", (ISongHandler songHandler, AddSongDto dto) =>
 			{
 				return songHandler.AddSong(dto);
 			});
