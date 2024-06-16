@@ -17,7 +17,6 @@ namespace MusikProjektetClient.MenuService
 			_genreService = genreService;
 			_menuHelper = menuHelper;
 		}
-
 		public async Task ShowMenu()
 		{
 			string[] menu = { "Add new genre to database", "Add a genre to your playlist", "Show all your liked genres", "Back to main menu" };
