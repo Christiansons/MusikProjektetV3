@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
+using MusikProjektetClient.Helpers;
 
 namespace MusikProjektetClient.Services
 {
@@ -17,14 +18,12 @@ namespace MusikProjektetClient.Services
 
 	public class SongService : ISongService
 	{
-		private readonly HttpClient _httpClient;
+		private readonly ISongHttpHelper _httpHelper;
 		private readonly IGenreService _genreService;
 		private readonly IArtistService _artistService;
-		string baseAddress = "http://localhost:5098";
-		public SongService(HttpClient httpClient, IArtistService artistService, IGenreService genreService)
+		public SongService(HttpClient httpClient, IArtistService artistService, IGenreService genreService, ISongHttpHelper songHttpHelper)
 		{
-			_httpClient = httpClient;
-			_httpClient.BaseAddress = new Uri(baseAddress);
+			_httpHelper = songHttpHelper;
 			_genreService = genreService;
 			_artistService = artistService;
 		}
@@ -49,12 +48,6 @@ namespace MusikProjektetClient.Services
 				GenreName = genre.GenreName,
 				SongTitle = songTite
 			};
-			
-			string json = JsonSerializer.Serialize(songDto);
-			StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
-
-			HttpResponseMessage response = await _httpClient.PostAsync("/AddSong", content);
-			response.EnsureSuccessStatusCode();
 		}
 
 		public async Task AddSongToUser()
