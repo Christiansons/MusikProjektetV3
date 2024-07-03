@@ -30,24 +30,50 @@ namespace MusikProjektetClient.Services
 
 		public async Task AddSong()
 		{
-			//Get or create a new genre
-			Genre genre = await _genreService.AddGenre();
-			
-			//Get or create a new artist
-			Artist artist = await _artistService.AddArtist();
-
-			//Create a new song
-            Console.WriteLine("Whats the name of the song?");
-			Console.Write("Title: ");
-			string songTite = Console.ReadLine();
-
-			AddSongDto songDto = new AddSongDto()
+			try
 			{
-				ArtistDescription = artist.Description,
-				ArtistName = artist.ArtistName,
-				GenreName = genre.GenreName,
-				SongTitle = songTite
-			};
+				//Get or create a new genre
+				Genre genre = await _genreService.AddGenre();
+
+				//Get or create a new artist
+				Artist artist = await _artistService.AddArtist();
+
+				//Create a new song
+				Console.WriteLine("Whats the name of the song?");
+				Console.Write("Title: ");
+				string songTite = Console.ReadLine();
+
+				AddSongDto songDto = new AddSongDto()
+				{
+					ArtistDescription = artist.Description,
+					ArtistName = artist.ArtistName,
+					GenreName = genre.GenreName,
+					SongTitle = songTite
+				};
+
+				HttpResponseMessage response = await _httpHelper.AddSong(songDto);
+
+				if (!response.IsSuccessStatusCode)
+				{
+					string errorMessage = $"Failed to add song, errorcode: {(int)response.StatusCode}, {response.ReasonPhrase}";
+
+					string responseContent = await response.Content.ReadAsStringAsync();
+
+					if (!string.IsNullOrEmpty(responseContent))
+					{
+						errorMessage += $" {responseContent}";
+					}
+                    await Console.Out.WriteLineAsync(errorMessage);
+                } 
+				else
+				{
+                    await Console.Out.WriteLineAsync("Successfully added song");
+                }
+			} catch (Exception ex)
+			{
+                await Console.Out.WriteLineAsync($"Error: {ex.Message}");
+            }
+			
 		}
 
 		public async Task AddSongToUser()

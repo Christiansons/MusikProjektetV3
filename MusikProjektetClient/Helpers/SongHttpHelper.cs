@@ -10,7 +10,7 @@ namespace MusikProjektetClient.Helpers
 {
 	public interface ISongHttpHelper
 	{
-
+		Task<HttpResponseMessage> AddSong(AddSongDto songDto);
 	}
 	
 	public class SongHttpHelper : ISongHttpHelper
@@ -30,7 +30,6 @@ namespace MusikProjektetClient.Helpers
 			StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
 			HttpResponseMessage response = await _httpClient.PostAsync("/AddSong", content);
-			response.EnsureSuccessStatusCode();
 
 			return response;
 		}
