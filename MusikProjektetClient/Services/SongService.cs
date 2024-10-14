@@ -26,7 +26,7 @@ namespace MusikProjektetClient.Services
 			_httpHelper = songHttpHelper;
 			_genreService = genreService;
 			_artistService = artistService;
-		}
+        }
 
 		public async Task AddSong()
 		{
@@ -93,7 +93,7 @@ namespace MusikProjektetClient.Services
 			string json = JsonSerializer.Serialize(dto);
 			StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
-			HttpResponseMessage response = await _httpClient.PostAsync("/ConnectUserToSong", content);
+			HttpResponseMessage response = await _httpHelper.PostAsync("/ConnectUserToSong", content);
 
             Console.WriteLine(await response.Content.ReadAsStringAsync());
 			Console.ReadKey();
@@ -103,7 +103,7 @@ namespace MusikProjektetClient.Services
 		public async Task ShowAllSongsAddedToUser()
 		{
 			Console.Clear();
-			HttpResponseMessage response = await _httpClient.GetAsync($"/GetSongsConnectedToUser/{GlobalLoginVariable.UserId}");
+			HttpResponseMessage response = await _httpHelper.GetAsync($"/GetSongsConnectedToUser/{GlobalLoginVariable.UserId}");
 			if (!response.IsSuccessStatusCode)
 			{
 				Console.WriteLine($"Failed to retrieve songs. Status code: {response.StatusCode}");

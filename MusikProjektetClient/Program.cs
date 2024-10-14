@@ -14,13 +14,14 @@ namespace MusikProjektetClient
 			HttpClient client = new HttpClient();
 			HttpClient lastFmClient = new HttpClient();
 
-			IUserService userService = new UserService(client);
-			IGenreService genreService = new GenreService(client);
+            IUserService userService = new UserService(client);
+            ISongHttpHelper songHttpHelper = new SongHttpHelper(client);
+            IGenreService genreService = new GenreService(client);
 			IArtistService artistService = new ArtistService(client);
-			ISongService songService = new SongService(client, artistService, genreService);
+			ISongService songService = new SongService(client, artistService, genreService, songHttpHelper);
 			IRecommendationService recommendationService = new RecommendationService(lastFmClient);
 
-			MenuHelper menuHelper = new MenuHelper();
+            MenuHelper menuHelper = new MenuHelper();
 			SongMenu songMenu = new SongMenu(songService, menuHelper);
 			ArtistMenu artistMenu = new ArtistMenu(artistService, menuHelper);
 			GenreMenu genreMenu = new GenreMenu(genreService, menuHelper);

@@ -1,18 +1,13 @@
-﻿using Moq.Protected;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Moq;
+using Moq.Protected;
+using MusikProjektetClient;
+using MusikProjektetClient.Services;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using MusikProjektetClient.Services;
-using MusikProjektetClient.Models;
-using MusikProjektetClient;
 
 namespace MusikProjektetTests
 {
-	[TestClass]
+    [TestClass]
 	public class ClientTests
 	{
 		[TestMethod]
@@ -46,8 +41,8 @@ namespace MusikProjektetTests
 			// Set the "login-id" 
 			GlobalLoginVariable.UserId = 1;
 
-			// Create an instance of songservice with the mocked services in its constructor
-			var songService = new SongService(mockClient, artistService.Object, genreService.Object);
+            // Create an instance of songservice with the mocked services in its constructor
+            var songService = new SongService(mockClient, artistService.Object, genreService.Object);
 
 			// Mock console input in the method
 			var consoleInput = new StringReader("TestSongTitle\n");
